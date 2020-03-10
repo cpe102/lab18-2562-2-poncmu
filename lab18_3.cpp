@@ -1,5 +1,5 @@
 #include<iostream>
-#include<string>
+#include<string.h>
 #include<fstream>
 #include<vector>
 #include<cstdlib>
@@ -8,6 +8,10 @@
 using namespace std;
 
 struct student{
+	string name;
+	int id;
+	char gender;
+	float gpa;
 	//Define struct student with four member (name ,id , gender, gpa);
 };
 
@@ -18,7 +22,7 @@ struct course{
 	vector<student *> student_list;
 };
 
-student * findstudent(vector<student> allstudents,int key){ //Correct this line
+student * findstudent(vector<student> &allstudents,int key){ //Correct this line
 	for(unsigned int i = 0; i < allstudents.size(); i++){
 		if(allstudents[i].id  == key) return &allstudents[i];
 	}
@@ -54,11 +58,17 @@ int main(){
 	
 	string textline;
 	
+	char name2[100];
+	int id2;
+	char gender2;
+	float gpa2;
+	int m=0;
 	while(getline(student_file,textline)){
-		student s; 
-	
+		student s;
+		sscanf(textline.c_str(),"%[^,],%d,%c,%f",name2,&id2,&gender2,&gpa2);
+		s={name2,id2,gender2,gpa2};
+		
 		//Assign value to the members of struct s;
-	
 		allstudents.push_back(s); 		
 	}
 	
@@ -77,13 +87,16 @@ int main(){
 				state = 3;
 			}else{
 				//Append lecture_list;
+				allcourses[m].lecture_list.push_back(textline);
+				
 			}			
 		}else{
 			if(textline == "---------------------------------------"){
-				state = 1;
+				state = 1; m++;
 			}else{
 				student *p = findstudent(allstudents,atof(textline.c_str()));
 				//Append student_list;
+				allcourses[m].student_list.push_back(p);
 			}
 		}
 	}
